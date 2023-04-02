@@ -1,0 +1,10 @@
+.travis.yml
+tsconfig.json
+test
+build
+.gitignore
+Gruntfile.js
+.idea
+.DS_Store
+benchmarks
+benchmark
