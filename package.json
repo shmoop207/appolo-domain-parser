@@ -12,7 +12,7 @@
   "dependencies": {
   },
   "scripts": {
-    "postinstall": "node build/build.js"
+    "prepublish": "node build/build.js"
   },
   "devDependencies": {
     "@types/chai": "^4.3.4",
