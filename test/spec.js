@@ -119,5 +119,19 @@ describe("Parse domain", function () {
             "domain": ""
         });
     });
+    it("Should remove www", () => {
+        (0, index_1.parseDomain)({ host: "www.altoadige.it" }).should.be.deep.contain({
+            "sld": "altoadige",
+            "tld": "it",
+            "subDomain": "www",
+            "domain": "altoadige.it"
+        });
+        (0, index_1.parseDomain)({ host: "altoadige.it" }).should.be.deep.contain({
+            "sld": "",
+            "tld": "altoadige.it",
+            "subDomain": "",
+            "domain": "altoadige.it"
+        });
+    });
 });
 //# sourceMappingURL=spec.js.map

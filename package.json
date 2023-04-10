@@ -1,6 +1,6 @@
 {
   "name": "@appolo/parse-domain",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "appolo domain parser",
   "publishConfig": {
     "access": "public"
@@ -10,6 +10,7 @@
   ],
   "main": "index.js",
   "dependencies": {
+    "parse-domain": "^3.0.4"
   },
   "scripts": {
     "prepublish": "node build/build.js"

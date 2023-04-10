@@ -1,6 +1,7 @@
 import {parseDomain} from "../index";
 import chai = require('chai');
 import sinonChai = require("sinon-chai");
+import parseDomain2 = require("parse-domain");
 import {ParseResultType} from "../src/common/enums/parseResultType";
 
 
@@ -144,6 +145,25 @@ describe("Parse domain", function () {
             "tld": "localhost",
             "subDomain": "",
             "domain": ""
+        })
+
+
+    })
+
+    it("Should remove www", () => {
+
+        parseDomain({host: "www.altoadige.it"}).should.be.deep.contain({
+            "sld": "altoadige",
+            "tld": "it",
+            "subDomain": "www",
+            "domain": "altoadige.it"
+        })
+
+        parseDomain({host: "altoadige.it"}).should.be.deep.contain({
+            "sld": "",
+            "tld": "altoadige.it",
+            "subDomain": "",
+            "domain": "altoadige.it"
         })
     })
 

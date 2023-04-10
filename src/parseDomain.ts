@@ -17,7 +17,12 @@ export function parseDomain(params: { host: string, icannOnly?: boolean }): IPar
     let labels = host.split(".");
 
     if (host === "" || ReservedTopLevelDomains.includes(labels[labels.length - 1])) {
-        return prepareResult({host, type: ParseResultType.Reserved, labels,domainResult:{tld:labels[labels.length - 1]}})
+        return prepareResult({
+            host,
+            type: ParseResultType.Reserved,
+            labels,
+            domainResult: {tld: labels[labels.length - 1]}
+        })
     }
 
     let publicTld = findTld(labels, require('./lib/publicList.json')),
@@ -34,22 +39,23 @@ export function parseDomain(params: { host: string, icannOnly?: boolean }): IPar
     return prepareResult({host, type: ParseResultType.Listed, labels, domainResult})
 }
 
-function prepareResult(params: { type: ParseResultType, domainResult?: Partial<IParseResultDomains>, host: string, labels?: string[] }): IParseDomainResult {
+function prepareResult(params: {
+    type: ParseResultType,
+    domainResult?: Partial<IParseResultDomains>,
+    host: string,
+    labels?: string[]
+}): IParseDomainResult {
 
     let {type, host, labels, domainResult = {}} = params;
-
-    let domainsDto: Partial<IParseResultDomains> = {
-        subDomain: domainResult.subDomain || "",
-        domain: domainResult.domain || "",
-        sld: domainResult.sld || "",
-        tld: domainResult.tld || "",
-    }
 
     let dto: IParseDomainResult = {
         hostname: host,
         labels: labels || [],
         type: type,
-        ...(domainsDto as IParseResultDomains),
+        subDomain: domainResult.subDomain || "",
+        domain: domainResult.domain || "",
+        sld: domainResult.sld || "",
+        tld: domainResult.tld || "",
     }
 
     return dto
@@ -84,7 +90,14 @@ function prepareDomains(labels: string[], index: number): IParseResultDomains {
         tld: labels.slice(index + 1).join(".") || "",
     };
 
-    dto.domain = `${dto.sld}.${dto.tld}`
+    if (dto.sld == "www") {
+        dto.subDomain = dto.sld
+        let parts = dto.tld.split(".")
+        dto.sld = parts[0]
+        dto.tld = parts.slice(1).join(".")
+    }
+
+    dto.domain = dto.sld ?`${dto.sld}.${dto.tld}` : dto.tld
 
     return dto
 }

@@ -11,7 +11,12 @@ function parseDomain(params) {
     host = host.trim().toLowerCase();
     let labels = host.split(".");
     if (host === "" || reserved_1.ReservedTopLevelDomains.includes(labels[labels.length - 1])) {
-        return prepareResult({ host, type: parseResultType_1.ParseResultType.Reserved, labels, domainResult: { tld: labels[labels.length - 1] } });
+        return prepareResult({
+            host,
+            type: parseResultType_1.ParseResultType.Reserved,
+            labels,
+            domainResult: { tld: labels[labels.length - 1] }
+        });
     }
     let publicTld = findTld(labels, require('./lib/publicList.json')), privateTld = !icannOnly ? findTld(labels, require('./lib/privateList.json')) : [];
     if (privateTld.length == 0 && publicTld.length == 0) {
@@ -24,13 +29,15 @@ function parseDomain(params) {
 exports.parseDomain = parseDomain;
 function prepareResult(params) {
     let { type, host, labels, domainResult = {} } = params;
-    let domainsDto = {
+    let dto = {
+        hostname: host,
+        labels: labels || [],
+        type: type,
         subDomain: domainResult.subDomain || "",
         domain: domainResult.domain || "",
         sld: domainResult.sld || "",
         tld: domainResult.tld || "",
     };
-    let dto = Object.assign({ hostname: host, labels: labels || [], type: type }, domainsDto);
     return dto;
 }
 function findTld(labels, list) {
@@ -54,7 +61,13 @@ function prepareDomains(labels, index) {
         sld: labels[index] || "",
         tld: labels.slice(index + 1).join(".") || "",
     };
-    dto.domain = `${dto.sld}.${dto.tld}`;
+    if (dto.sld == "www") {
+        dto.subDomain = dto.sld;
+        let parts = dto.tld.split(".");
+        dto.sld = parts[0];
+        dto.tld = parts.slice(1).join(".");
+    }
+    dto.domain = dto.sld ? `${dto.sld}.${dto.tld}` : dto.tld;
     return dto;
 }
 //# sourceMappingURL=parseDomain.js.map
