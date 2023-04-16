@@ -1,7 +1,6 @@
 import {parseDomain} from "../index";
 import chai = require('chai');
 import sinonChai = require("sinon-chai");
-import parseDomain2 = require("parse-domain");
 import {ParseResultType} from "../src/common/enums/parseResultType";
 
 
